@@ -1,15 +1,19 @@
 #include <iostream>
-#include <string>
 
-auto main (int argc, char* argv[]) -> int {
-int liczba = std::stoi(argv[1]);
+auto main() -> int {
 
+auto liczba = std::string{};
+std::cout<<"Give a number to countdown...";
+std::getline(std::cin, liczba);
 
-do {
-    std::cout<<liczba<<"...\n";
-    liczba--;
-} while (liczba >= 0);
-
+for(int i=stoi(liczba); i>=0; i--) {
+std::cout<<i<<"...\n";
+}
+for(int i=stoi(liczba); i<=0; i++) {
+std::cout<<i<<"...\n";
+}
 return 0;
 }
+
+
 

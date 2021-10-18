@@ -1,7 +1,6 @@
 #include <iostream>
-#include <string>
 
-auto main(int, char*argv[]) -> int 
+auto main() -> int 
 {
 
 auto password = std::string{};
@@ -11,7 +10,7 @@ std::getline(std::cin, password);
 while (password != "student")
 {
 	std::cout << "Wrong password \n";
-	std ::getline(std::cin, password);
+	std::getline(std::cin, password);
 }
 
 if (password == "student")

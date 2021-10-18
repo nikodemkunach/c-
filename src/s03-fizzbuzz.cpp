@@ -1,9 +1,13 @@
 #include <iostream>
 
-auto main (int argc, char* argv[]) -> int {
-int liczba = std::stoi(argv[1]);
+auto main() -> int
+{
+auto liczba = std::string{};
+std::cout<<"Give a number: ";
+std::getline(std::cin, liczba);
 
-for (int i=1; i<=liczba; i++) {
+for (int i=1;i<=std::stoi(liczba);i++)
+{
 std::cout<<i<<" ";
 
 if (i%3 == 0){
