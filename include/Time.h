@@ -14,7 +14,7 @@ namespace s25030 {
     auto next_second() -> void;
 
     enum class Time_of_day {morning, day, evening, night};
-    auto to_string(Time_of_day const) -> std::string;
+    static auto to_string(Time_of_day const) -> std::string;
     auto time_of_day() const -> Time_of_day;
     auto to_string() const -> std::string;
 

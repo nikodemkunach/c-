@@ -7,7 +7,7 @@ s25030::Student::Student(
 	std::string nazwisko,
 	std::string idnumber,
 	unsigned short semestr,
-	double srednia)
+	double srednia) : imie{imie}, nazwisko{nazwisko}, idnumber{idnumber}, semestr{semestr}, srednia{srednia}
 {}
 
 auto s25030::Student::to_string() const -> std::string {
@@ -19,7 +19,7 @@ auto s25030::Student::to_string() const -> std::string {
 
 	return 0;
 	}
-
+ 
 
 auto main() -> int {
 	auto const student = s25030::Student{"Student", "Studencki", "s12345", 1, 4.268};
