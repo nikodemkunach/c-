@@ -1,322 +1,535 @@
+#include "Time.h"
 #include <iostream>
 #include <string>
-#include "Time.h"
 
-auto Time::to_string() -> std::string
+
+auto s25030::Time::next_hour() -> void
 {
-    std::string hours;
-    if(hour < 10) 
-    {
-    hours = "0" + std::to_string(hour);
-    }
-    else 
-    {
-    hours = std::to_string(hour);
-    }
-
-    std::string minute;
-    if(minutes < 10)
-    {
-    minute = "0" + std::to_string(minutes);
-    }
-    else
-    {
-    minute = std::to_string(minutes);
-    }
-
-    std::string seconds; 
-    if(sec < 10) 
-    {
-    seconds = "0" + std::to_string(sec);
-    }
-    else
-    {
-    seconds = std::to_string(sec);
-    }
-    return hours + ":" + minute + ":" + seconds;
-}
-
-auto Time::next_hour()-> void
-{
-    hour++;
-    if(hour > 23)
-    {
+    if (hour < 23) {
+        ++hour;
+    } else {
         hour = 0;
     }
 }
 
-auto Time::next_minute()-> void
+auto s25030::Time::next_minute() -> void
 {
-    minutes++;
-    if(minutes > 59)
-    {
-        minutes = 0;
+    if (min < 59) {
+        ++min;
+    } else {
+        min = 0;
         next_hour();
     }
 }
-
-auto Time::next_second()-> void
+auto s25030::Time::next_second() -> void
 {
-    sec++;
-    if(sec > 59)
-    {
+    if (sec < 59) {
+        ++sec;
+    } else {
         sec = 0;
         next_minute();
     }
 }
 
-Time::Time(int h, int m, int s)
-    : hour{h}
-    , minutes{m}
-    , sec{s}
+s25030::Time::Time(int h, int m, int s) : hour{h}, min{m}, sec{s}
 {}
 
-auto Time::time_of_day() const
+auto s25030::Time::to_string() const -> std::string
 {
-    Time_of_day time;
+    auto output = std::ostringstream{};
 
-    if(hour<=6)
-    {
-    time = Time_of_day::noc;
+    if (hour < 10) {
+        output << "0" << hour << ":";
+    } else {
+        output << hour << ":";
     }
 
-    else if(hour<=9)
-    {
-    time = Time_of_day::rano;
+    if (min < 10) {
+        output << "0" << min << ":";
+    } else {
+        output << min << ":";
     }
 
-    else if(hour<=19)
-    {
-    time = Time_of_day::dzien;
+    if (sec < 10) {
+        output << "0" << sec;
+    } else {
+        output << sec;
     }
+
+    return output.str();
+}
+
+
+auto s25030::Time::to_string(s25030::Time::Time_of_day const t) -> std::string
+{
+    switch (t) {
+    case s25030::Time::Time_of_day::Morning:
+        return "Morning";
+    case s25030::Time::Time_of_day::Afternoon:
+        return "Afternoon";
+    case s25030::Time::Time_of_day::Evening:
+        return "Evening";
+    case s25030::Time::Time_of_day::Night:
+        return "Night";
+    default:
+        return "What_time_of_day";
+    }
+}
+
+
+auto s25030::Time::time_of_day() const -> s25030::Time::Time_of_day
+
+{
+    if (hour >= 5 && hour < 12)
+        return s25030::Time::Time_of_day::Morning;
+
+    else if (hour >= 12 && hour < 18)
+        return s25030::Time::Time_of_day::Afternoon;
+
+    else if (hour >= 18 && hour < 20)
+        return s25030::Time::Time_of_day::Evening;
+
     else
-    {
-    time = Time_of_day::wieczor;
+        return s25030::Time::Time_of_day::Night;
+}
+
+
+auto s25030::Time::operator+(s25030::Time const& op) const -> s25030::Time
+{
+    int h = hour, m = min, s = sec;#include "Time.h"
+#include <iostream>
+#include <string>
+
+
+auto s25030::Time::next_hour() -> void
+{
+    if (hour < 23) {
+        ++hour;
+    } else {
+        hour = 0;
     }
-    return time; 
 }
 
-auto to_string(Time_of_day pora_dnia) -> std::string 
+auto s25030::Time::next_minute() -> void
 {
-    switch(pora_dnia)
-    {       
-        case Time_of_day::noc:
-        return "noc\n";
-        break;
-
-        case Time_of_day::rano:
-        return "rano\n";
-        break;
-
-        case Time_of_day::dzien:
-        return "dzien\n";
-        break;
-
-        case Time_of_day::wieczor:
-        return "wieczor\n";
-        break;
-        default:
-        return  "Brak danych";
+    if (min < 59) {
+        ++min;
+    } else {
+        min = 0;
+        next_hour();
     }
-    
 }
-auto Time::operator+ (Time const& p)  const -> Time
+auto s25030::Time::next_second() -> void
 {
-	auto czas = Time{hour, minutes, sec};
-		
-	int h, m, s;
-	if(hour + p.hour > 24)
-	{
-		h = hour + p.hour - 24;
-	}
-	else
-    {
-    h = hour + p.hour;
-	}
-    	
-	if(minutes + p.minutes > 59)
-	{
-		m = minutes + p.minutes - 60;
-		h++;
-	}
-	else
-    {
-	m = minutes + p.minutes;
+    if (sec < 59) {
+        ++sec;
+    } else {
+        sec = 0;
+        next_minute();
     }
-		
-	if(sec + p.sec > 59)
-	{
-		s = sec + p.sec - 60;
-		m++;
-	}
-	else
-    {
-	s = sec + p.sec;
-    }		
-	czas.hour = h;
-	czas.minutes = m;
-	czas.sec = s;
-		
-	return czas;
 }
 
-auto Time::operator- (Time const& p)  const -> Time
+s25030::Time::Time(int h, int m, int s) : hour{h}, min{m}, sec{s}
+{}
+
+auto s25030::Time::to_string() const -> std::string
 {
-	auto czas = Time{hour, minutes, sec};
-	
-	if(czas < p)
-	{
-		std::cout << "Nie ma ujemnego czasu." << std::endl;
-		return czas;
-	}	
-	
-	int h, m, s;
-	
-	h = hour - p.hour ;
-			
-	if(minutes - p.minutes < 0)
-	{
-		m = minutes - p.minutes + 60;
-		h--;
-	}
-	else
-		m = minutes - p.minutes;
-		
-	if(sec + p.sec < 0 )
-	{
-		s = sec + p.sec + 60;
-		m--;
-	}
-	else
-		s = sec - p.sec;
-				
-	czas.hour = h;
-	czas.minutes = m;
-	czas.sec = s;
-		
-	return czas;
+    auto output = std::ostringstream{};
+
+    if (hour < 10) {
+        output << "0" << hour << ":";
+    } else {
+        output << hour << ":";
+    }
+
+    if (min < 10) {
+        output << "0" << min << ":";
+    } else {
+        output << min << ":";
+    }
+
+    if (sec < 10) {
+        output << "0" << sec;
+    } else {
+        output << sec;
+    }
+
+    return output.str();
 }
 
-auto Time::operator< (Time const &p) const -> bool
-{
 
-	if(hour < p.hour)
-	{
-		return true;
-	}
-	else if(hour == p.hour)
-	{
-		if(minutes < p.minutes)
-		{
-			return true;
-		}
-		else if(minutes == p.minutes)
-		{
-			if(sec < p.sec)
-			{
-				return true;
-			}
-			else 
-				return false;
-		}
-	} 
-	return false;
+auto s25030::Time::to_string(s25030::Time::Time_of_day const t) -> std::string
+{
+    switch (t) {
+    case s25030::Time::Time_of_day::Morning:
+        return "Morning";
+    case s25030::Time::Time_of_day::Afternoon:
+        return "Afternoon";
+    case s25030::Time::Time_of_day::Evening:
+        return "Evening";
+    case s25030::Time::Time_of_day::Night:
+        return "Night";
+    default:
+        return "What_time_of_day";
+    }
 }
 
-auto Time::operator> (Time const &p) const -> bool
-{
 
-	if(hour > p.hour)
-	{
-		return true;
-	}
-	else if(hour == p.hour)
-	{
-		if(minutes > p.minutes)
-		{
-			return true;
-		}
-		else if(minutes == p.minutes)
-		{
-			if(sec > p.sec)
-			{
-				return true;
-			}
-			else 
-				return false;
-		}
-	} 
-	return false;
+auto s25030::Time::time_of_day() const -> s25030::Time::Time_of_day
+
+{
+    if (hour >= 5 && hour < 12)
+        return s25030::Time::Time_of_day::Morning;
+
+    else if (hour >= 12 && hour < 18)
+        return s25030::Time::Time_of_day::Afternoon;
+
+    else if (hour >= 18 && hour < 20)
+        return s25030::Time::Time_of_day::Evening;
+
+    else
+        return s25030::Time::Time_of_day::Night;
 }
 
-auto Time::operator== (Time const &p) const -> bool
+
+auto s25030::Time::operator+(s25030::Time const& op) const -> s25030::Time
 {
-	if(hour == p.hour && minutes == p.minutes && sec == p.sec)
-		return true;
-	
-	return false;
+    int h = hour, m = min, s = sec;
+    s = s + op.sec;
+    m = m + op.min;
+    h = h + op.hour;
+    if (s > 59) {
+        s = s - 60;
+        m++;
+    }
+    if (m > 59) {
+        m = m - 60;
+        h++;
+    }
+    if (h > 23) {
+        h = h - 24;
+    }
+    return Time(h, m, s);
 }
 
-auto Time::operator!= (Time const &p) const -> bool
+auto s25030::Time::operator-(s25030::Time const& op) const -> s25030::Time
 {
-	if(hour == p.hour && minutes == p.minutes && sec == p.sec)
-		return false;
-	
-	return true;
+    int h = hour, m = min, s = sec;
+    s = s - op.sec;
+    m = m - op.min;
+    h = h - op.hour;
+    if (s < 0) {
+        s = s + 60;
+        m--;
+    }
+    if (m < 0) {
+        m = m + 60;
+        h--;
+    }
+    if (h < 0) {
+        h = h + 24;
+    }
+    return Time(h, m, s);
+}
+
+auto s25030::Time::operator<(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h < op.hour)
+        return true;
+    else if (m < op.min)
+        return true;
+    else if (s < op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator>(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h > op.hour)
+        return true;
+    else if (m > op.min)
+        return true;
+    else if (s > op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator==(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h == op.hour)
+        return true;
+    else if (m == op.min)
+        return true;
+    else if (s == op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator!=(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h != op.hour)
+        return true;
+    else if (m != op.min)
+        return true;
+    else if (s != op.sec)
+        return true;
+    else
+        return false;
+}
+auto s25030::Time::count_seconds() const -> uint64_t
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+
+    std::uint64_t c_sec = h * 3600 + m * 60 + s;
+    return c_sec;
+}
+
+
+auto s25030::Time::count_minutes() const -> uint64_t
+{
+    int h = hour;
+    int m = min;
+
+    std::uint64_t c_min = h * 60 + m;
+    return c_min;
+}
+auto s25030::Time::time_to_midnight() const -> s25030::Time
+{
+    s25030::Time tim_mid(0, 0, 0);
+    tim_mid.sec  = 60 - sec;
+    tim_mid.min  = 59 - min;
+    tim_mid.hour = 23 - hour;
+
+    return tim_mid;
 }
 
 auto main() -> int
 {
-    auto czas3 = Time{23,58,58};
-    for(auto i=0; i<3; i++)
-    {
-    std::cout << czas3.to_string()<<"    ";
+    std::cout << "CZAS: ";
+    auto time = s25030::Time(23, 59, 59);
+    std::cout << time.to_string() << "\n";
+
+    std::cout << "Next(hour,minute,second): ";
+    time.next_minute();
+    time.next_hour();
+    time.next_second();
+    std::cout << time.to_string() << "\n";
+
+    std::cout << "Seconds: ";
+    std::cout << time.count_seconds() << "\n";
+
+    std::cout << "Minutes: ";
+    std::cout << time.count_minutes() << "\n";
+
+    std::cout << "Time to mindnight: ";
+    std::cout << time.time_to_midnight().hour << ":";
+    std::cout << time.time_to_midnight().min << ":";
+    std::cout << time.time_to_midnight().sec << "\n";
+
+    std::cout << "Time of Day: ";
+    std::cout << time.to_string(time.time_of_day()) << "\n";
     
-    std::cout << to_string(czas3.time_of_day());
+    std::cout << "Operatory: " << "\n";
+    std::cout << "Dodawanie czasu\n";
+    auto time_2 = time + s25030::Time(4, 0, 2);
+    auto time_3 = time_2 - s25030::Time(5, 0, 59);
+    std::cout << time_2.to_string() << "\n";
+    std::cout << "Odjecie od czasu powyzej danego czasu\n";
+    std::cout << time_3.to_string() << "\n";
 
-    czas3.next_minute();
+    std::cout << "Porownywanie\n";
+    auto time_4 = time > s25030::Time(5, 3, 5);
+    std::cout << time.to_string() << " > " << s25030::Time(5, 3, 5).to_string() << "\n";
+    if (time_4 == 1) {
+        std::cout << "is true \n";
+    } else {
+        std::cout << "is false \n";
     }
-    for(auto i=0; i<3; i++)
-    {
-    std::cout << czas3.to_string()<<"    ";
-
-    std::cout << to_string(czas3.time_of_day());
-
-    czas3.next_second();
+    return 0;
+}
+    s = s + op.sec;
+    m = m + op.min;
+    h = h + op.hour;
+    if (s > 59) {
+        s = s - 60;
+        m++;
     }
-   
-   auto czas2 = Time{12,1,59};
-   auto czas = Time{5,30,1};
-   
-   std::cout << std::endl; 
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " + " << std::endl;
-   std::cout << (czas + czas2).to_string() << std::endl; 
-   
-   std::cout << std::endl;
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " - " << std::endl;
-   std::cout << (czas2 - czas).to_string() << std::endl; 
-   
-   std::cout << std::endl;
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " < " << std::endl;
-   std::cout << (czas2 < czas) << std::endl; 
-   
-   std::cout << std::endl;
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " > " << std::endl;
-   std::cout << (czas2 > czas) << std::endl; 
+    if (m > 59) {
+        m = m - 60;
+        h++;
+    }
+    if (h > 23) {
+        h = h - 24;
+    }
+    return Time(h, m, s);
+}
 
-   std::cout << std::endl;
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " = " << std::endl;
-   std::cout << (czas2 == czas) << std::endl;
+auto s25030::Time::operator-(s25030::Time const& op) const -> s25030::Time
+{
+    int h = hour, m = min, s = sec;
+    s = s - op.sec;
+    m = m - op.min;
+    h = h - op.hour;
+    if (s < 0) {
+        s = s + 60;
+        m--;
+    }
+    if (m < 0) {
+        m = m + 60;
+        h--;
+    }
+    if (h < 0) {
+        h = h + 24;
+    }
+    return Time(h, m, s);
+}
+
+auto s25030::Time::operator<(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h < op.hour)
+        return true;
+    else if (m < op.min)
+        return true;
+    else if (s < op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator>(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h > op.hour)
+        return true;
+    else if (m > op.min)
+        return true;
+    else if (s > op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator==(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h == op.hour)
+        return true;
+    else if (m == op.min)
+        return true;
+    else if (s == op.sec)
+        return true;
+    else
+        return false;
+}
+
+auto s25030::Time::operator!=(s25030::Time const& op) const -> bool
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+    if (h != op.hour)
+        return true;
+    else if (m != op.min)
+        return true;
+    else if (s != op.sec)
+        return true;
+    else
+        return false;
+}
+auto s25030::Time::count_seconds() const -> uint64_t
+{
+    int h = hour;
+    int m = min;
+    int s = sec;
+
+    std::uint64_t c_sec = h * 3600 + m * 60 + s;
+    return c_sec;
+}
+
+
+auto s25030::Time::count_minutes() const -> uint64_t
+{
+    int h = hour;
+    int m = min;
+
+    std::uint64_t c_min = h * 60 + m;
+    return c_min;
+}
+auto s25030::Time::time_to_midnight() const -> s25030::Time
+{
+    s25030::Time tim_mid(0, 0, 0);
+    tim_mid.sec  = 60 - sec;
+    tim_mid.min  = 59 - min;
+    tim_mid.hour = 23 - hour;
+
+    return tim_mid;
+}
+
+auto main() -> int
+{
+    std::cout << "CZAS: ";
+    auto time = s25030::Time(23, 59, 59);
+    std::cout << time.to_string() << "\n";
+
+    std::cout << "Next(hour,minute,second): ";
+    time.next_minute();
+    time.next_hour();
+    time.next_second();
+    std::cout << time.to_string() << "\n";
+
+    std::cout << "Seconds: ";
+    std::cout << time.count_seconds() << "\n";
+
+    std::cout << "Minutes: ";
+    std::cout << time.count_minutes() << "\n";
+
+    std::cout << "Time to mindnight: ";
+    std::cout << time.time_to_midnight().hour << ":";
+    std::cout << time.time_to_midnight().min << ":";
+    std::cout << time.time_to_midnight().sec << "\n";
+
+    std::cout << "Time of Day: ";
+    std::cout << time.to_string(time.time_of_day()) << "\n";
     
-   std::cout << std::endl;
-   std::cout << czas2.to_string()<< std::endl;
-   std::cout << czas.to_string()<< " != " << std::endl;
-   std::cout << (czas2 != czas) << std::endl; 
+    std::cout << "Operatory: " << "\n";
+    std::cout << "Dodawanie czasu\n";
+    auto time_2 = time + s25030::Time(4, 0, 2);
+    auto time_3 = time_2 - s25030::Time(5, 0, 59);
+    std::cout << time_2.to_string() << "\n";
+    std::cout << "Odjecie od czasu powyzej danego czasu\n";
+    std::cout << time_3.to_string() << "\n";
 
+    std::cout << "Porownywanie\n";
+    auto time_4 = time > s25030::Time(5, 3, 5);
+    std::cout << time.to_string() << " > " << s25030::Time(5, 3, 5).to_string() << "\n";
+    if (time_4 == 1) {
+        std::cout << "is true \n";
+    } else {
+        std::cout << "is false \n";
+    }
     return 0;
 }
